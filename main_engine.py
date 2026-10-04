@@ -19,8 +19,11 @@ from ultralytics import YOLO
 
 from engine.analytics import TelemetryAnalytics, calculate_fcr, calculate_savings
 
-BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
+# rstrip: "https://host/" + "/api/..." would otherwise give "//api/..." (404)
+BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000").rstrip("/")
 POST_INTERVAL = float(os.getenv("POST_INTERVAL", "2"))
+# Remote backends (Replit) can be slow on a cold start; 2s was too tight.
+POST_TIMEOUT = float(os.getenv("POST_TIMEOUT", "10"))
 
 # Nilai simulasi untuk demo biomassa (belum ada sensor/timbangan sungguhan)
 DEMO_TOTAL_FISH = 250
@@ -69,7 +72,7 @@ def apply_water_filter(frame, mode="normal"):
 
 def post_json(path, payload):
     try:
-        requests.post(f"{BACKEND_URL}{path}", json=payload, timeout=2).raise_for_status()
+        requests.post(f"{BACKEND_URL}{path}", json=payload, timeout=POST_TIMEOUT).raise_for_status()
     except requests.RequestException as e:
         print(f"[Backend] POST {path} gagal: {e}")
 
@@ -172,7 +175,8 @@ def main():
                 break
 
     cap.release()
-    cv2.destroyAllWindows()
+    if not args.headless:  # opencv-python-headless has no GUI -> would raise
+        cv2.destroyAllWindows()
     pool.shutdown(wait=True)
 
 

@@ -17,6 +17,8 @@ Refactor of `index.py`: YOLOv8 + water-colour filter + analytics, POSTs to `hack
 - On each water-mode change -> `POST /api/biomass/` (demo constants `DEMO_*`: feed, fish count, biomass gain are simulated).
 - POSTs run in a one-worker thread pool so inference never blocks on the network.
 - Telegram alerts are intentionally not part of this project.
+- Deploy: see `README.md` (Replit worker, `requirements.txt` = CPU torch + `ultralytics-opencv-headless`). `BACKEND_URL` must be a *public* URL; Replit `*.pike.replit.dev` private dev domains redirect to a login shield and break both this engine and the browser (shows as CORS error). `BACKEND_URL` trailing slash is stripped.
+- Folder was renamed from `AI` to `hackton-ai`; model path in `main_engine.py` is `runs/detect/lele_model_v4-5/weights/best.pt`.
 
 ## Notes
 - Inference is the bottleneck: resize before `predict`, JPEG-encode at quality ~70 for the stream.

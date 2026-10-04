@@ -1,0 +1,9 @@
+# CPU-only PyTorch (the default Linux wheel bundles CUDA, several GB, too big for Replit)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+torchvision
+
+# Ultralytics build that depends on opencv-python-headless (no libGL / display needed)
+ultralytics-opencv-headless
+numpy
+requests
