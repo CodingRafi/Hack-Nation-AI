@@ -1,0 +1,6 @@
+path: D:/Python/Hackton/AI/archive
+train: train/images
+val: val/images
+
+nc: 1
+names: ['catfish']
